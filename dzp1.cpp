@@ -58,7 +58,7 @@ void Graph::deleteNode(int node) {
           return;
      }
 
-     node_num--;
+     
      int i1 = indices[node];
      int i2 = indices[node + 1];
 
@@ -71,6 +71,7 @@ void Graph::deleteNode(int node) {
           this->deleteEdge(node, temparr[i]); //menja se edges u toku petlje i onda pri drugom poyivanju budu rubbish vrednosti
      }
 
+     node_num--;
      for (int i = 0; i < edge_num * 2; i++)
           if (edges[i] > node) edges[i]--;
 
@@ -287,7 +288,7 @@ int main() {
 
           switch (menu) {
                case 1:
-                    if (g != NULL) cout << "Graf je vec definisan" << endl;
+                    if (g != NULL) cout << "Graf je vec definisan" << endl; 
                     else {
                          cout << "Unesite broj cvorova grafa" << endl;
                          int numberofnodes;
@@ -308,6 +309,7 @@ int main() {
                          int e;
                          cin >> e;
                          g->deleteNode(e);
+                         if (g->node_num == 0) g = NULL;
                     }
                     break;
                case 4: 
