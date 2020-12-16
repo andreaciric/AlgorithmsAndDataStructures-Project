@@ -306,15 +306,34 @@ void Graph::printGraph() {
      cout << "\nBroj cvorova je " << node_num << endl;
      cout << "Broj grana je " << edge_num << endl;
      cout << endl;
-     cout << "Indices: ";
+     cout << "Indices:    ";
      for (int i = 0; i <= node_num; i++) cout << indices[i] << " ";
      cout << endl;
-     cout << "Edges:   ";
+     cout << "Edges:      ";
      for (int i = 0; i < 2 * edge_num; i++) cout << edges[i].otherEdge << " ";
      cout << endl;
-     cout << "Prices:  ";
+     cout << "Prices:     ";
      for (int i = 0; i < 2 * edge_num; i++) cout << edges[i].price << " ";
      cout << endl;
+     cout << "Road type:  ";
+     for (int i = 0; i < 2 * edge_num; i++) cout << edges[i].road << " ";
+     cout << endl;
+     cout << endl;
+
+     bool* printed = new bool[node_num - 1];
+     for (int i = 0; i < node_num; i++) printed[i] = false;
+
+     for (int i = 0; i < node_num; i++) {
+          for (int j = indices[i]; j < indices[i+1]; j++)
+               if (!printed[edges[j].otherEdge]) {
+                    cout << "Grana (" << i << "," << edges[j].otherEdge << ") ima cenu " << edges[j].price << " i ";
+                    if (edges[j].road == 1) cout << "izgradjen je drumski put" << endl;
+                    else cout << "nije izgradjen drumski put" << endl;
+               }
+          printed[i] = true;
+     }
+
+
 }
 
 int Graph::primsAlgorithm() {
