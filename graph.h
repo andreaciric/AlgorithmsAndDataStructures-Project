@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <stack>
-
 using namespace std;
 
 struct Edge {
@@ -361,11 +360,15 @@ void Graph::minPath(int a, int b) {
      first->node = a;
      first->price = 0;
      s.push(first);
+     
      int minPrice = INT_MAX;
      int* minVector = new int[node_num];
      int* currVector = new int[node_num];
+     int** allVectors = new int* [node_num];
+     
      for (int i = 0; i < node_num; i++) {
           minVector[i] = currVector[i] = -1;
+          allVectors[i] = NULL;
      }
      currVector[0] = minVector[0] = a;
 
@@ -377,12 +380,23 @@ void Graph::minPath(int a, int b) {
           s.pop();
           currVector[top->level] = top->node;
 
-          //cout << "Ovde sam se zaglavio" << top->node << endl;
-
           if (top->node == b) {
                if (top->price <= minPrice) {                                              //menjanje minimalnog vektora!
                     for (int i = 0; i < node_num; i++) minVector[i] = currVector[i];
-                    minPrice = top->price;
+                    if (top->price < minPrice) {
+                         minPrice = top->price;
+                         for (int i = 0; i < node_num; i++) {
+                              delete allVectors[i];
+                              allVectors[i] = NULL;
+                         }
+                         allVectors[0] = new int[node_num];
+                         for (int i = 0; i < node_num; i++) allVectors[0][i] = minVector[i];
+                    } else {
+                         int k = 0;
+                         while (allVectors[k] != NULL) k++;
+                         allVectors[k] = new int[node_num];
+                         for (int j = 0; j < node_num; j++) allVectors[k][j] = minVector[j];
+                    }
                } else {
                                                                                           //dosli smo do kraja al je put duzi
                }
@@ -403,13 +417,45 @@ void Graph::minPath(int a, int b) {
           }
 
      }
+     
+     int* roads = new int[node_num];
+     for (int i = 0; i < node_num; i++) roads[i] = 0;
+     for (int i = 0; i < node_num; i++) 
+          if (allVectors[i] != NULL) {                           //0 1 2 3 -1
+               for (int j = 0; j < node_num - 1; j++)
+                    if (allVectors[i][j + 1] != -1)
+                         for (int k = indices[j]; k < indices[j + 1]; k++)
+                              if (edges[k].otherEdge == allVectors[i][j + 1])
+                                   if (edges[k].road == 0) roads[i]++;
+          }
 
-     cout << "Ukupna cena udaljenosti cvora " << a << " od cvora " << b << " iznosi " << minPrice << endl;
-     cout << "Putanja: ";
      for (int i = 0; i < node_num; i++)
-          if (minVector[i] != -1) cout << minVector[i] << " ";
-     cout << endl;
+          for (int j = 0; j < node_num; j++) {
+               if (allVectors[i] != NULL && allVectors[j] != NULL) {
+                    if (roads[i] < roads[j]) {
+                         int* temp = allVectors[i];
+                         allVectors[i] = allVectors[j];
+                         allVectors[j] = temp;
+                         int tempp = roads[i];
+                         roads[i] = roads[j];
+                         roads[j] = tempp;
+                    }
+               }
+          }
+     cout << "-------------------------------------------------------------" << endl;
+     cout << "Ukupna cena udaljenosti cvora " << a << " od cvora " << b << " iznosi " << minPrice << endl;
+     for (int i = 0; i < node_num; i++)
+          if (allVectors[i] != NULL) {
+               cout << "\nPutanja " << i << ": ";
+               for (int j = 0; j < node_num; j++)
+                    if (allVectors[i][j] != -1) cout << allVectors[i][j] << " ";
+               cout << "ima " << roads[i] << " neizgradjena drumska puta" << endl;
+          }
 
+     for (int i = 0; i < node_num; i++) {
+          delete allVectors[i];
+          allVectors[i] = NULL;
+     }
 }
 
 void Graph::minRoutes(int station) {
