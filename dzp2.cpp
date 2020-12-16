@@ -10,7 +10,7 @@ int main() {
 
      while (menu != 0) {
 
-          cout << "\n--------------------------------------------" << endl;
+          cout << "\n***********************************************************************************************************************" << endl;
           cout << "Unesite broj opcije koju zelite da izvrsite: \n\n 1. Kreiranje prazne strukture\n 2. Dodavanje cvora u graf\n 3. Uklanjanje cvora iz grafa\n 4. Dodavanje grane izmedju dva cvora u grafu\n 5. Uklanjanje grane izmedju dva cvora u grafu\n 6. Ispis reprezentacije grafa\n 7. Brisanje grafa iz memorije\n 8. Prikazi minimalnu cenu za izgradnju metroa\n 9. Pronalazenje najkrace rute\n 0. Izlaz\n" << endl;
           cin >> menu;
 
@@ -45,7 +45,7 @@ int main() {
                }
                break;
           case 4:
-               cout << "Unesite granu koju dodajete oblika (a,b) gde su a i b cvorovi koje grana povezuje, cenu i tip" << endl;
+               cout << "Unesite vrednosti grane redom: cvorovi koje grana povezuje, cena i tip (0 - neizgradjen, 1 - izgradjen)" << endl;
                int a, b, p1, type1;
                cin >> a >> b >> p1 >> type1;
                g->addEdge(a, b, p1, type1);
